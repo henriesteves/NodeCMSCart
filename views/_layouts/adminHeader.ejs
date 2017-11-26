@@ -34,3 +34,12 @@
 
     <div class="container">
       <%- messages('messages', locals) %>
+
+      <% if (errors) { %>
+        <br>
+        <% errors.forEach((error) => { %>
+          <div class="alert alert-danger">
+            <%= error.msg %>
+          </div>
+        <% }); %>
+      <% } %>

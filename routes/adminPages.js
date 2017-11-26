@@ -8,7 +8,11 @@ const Page = require('../models/page');
 * Get page index
 */
 router.get('/', (req, res) => {
-  res.send('Admin Area');
+  Page.find({}).sort({sorting: 1}).exec((err, pages) => {
+    res.render('admin/pages', {
+      pages
+    })
+  });
 });
 
 /*
@@ -63,7 +67,7 @@ router.post('/add-page', (req, res) => {
           title,
           slug,
           content,
-          string: 0
+          string: 100
         });
 
         page.save((err) =>{

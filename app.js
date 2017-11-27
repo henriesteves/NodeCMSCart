@@ -9,6 +9,7 @@ const config = require('./config/database');
 
 // Connect to db
 mongoose.connect(config.database, { useMongoClient: true });
+mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
 

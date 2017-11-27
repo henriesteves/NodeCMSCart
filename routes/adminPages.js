@@ -107,5 +107,23 @@ router.post('/reorder-page', (req, res) => {
   }
 });
 
+/*
+* Get edit page
+*/
+router.get('/edit-page/:slug', (req, res) => {
+  
+  Page.findOne({ slug: req.params.slug }, (err, page) => {
+    if (err) return console.log(err);
+
+    res.render('admin/editPage', {
+      id: page._id,
+      title: page.title,
+      slug: page.slug,
+      content: page.content
+    });
+  });
+
+});
+
 // Exports
 module.exports = router;

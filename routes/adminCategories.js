@@ -140,7 +140,7 @@ router.post('/edit-category/:id', (req, res) => {
 /*
 * Get delete page
 */
-router.get('/delete-page/:id', (req, res) => {
+router.get('/delete-category/:id', (req, res) => {
   Category.findByIdAndRemove(req.params.id, (err) => {
     if (err) console.log(err);
 

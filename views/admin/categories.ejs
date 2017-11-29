@@ -18,12 +18,8 @@
     <% categories.forEach((category) => { %>
       <tr>
         <td><%= category.title %></td>
-        <td><a href="/admin/categories/edit-category/<%= category.slug %>">Edit</a></td>
-        <% if (category.slug == 'home') { %>
-          <td></td>
-        <% } else { %>
-          <td><a class="confirmDeletion" href="/admin/categories/delete-category/<%= category._id %>">Delete</a></td>
-        <% } %>
+        <td><a href="/admin/categories/edit-category/<%= category._id %>">Edit</a></td>
+        <td><a class="confirmDeletion" href="/admin/categories/delete-category/<%= category._id %>">Delete</a></td>
       </tr>
     <% }) %>
   </tbody>

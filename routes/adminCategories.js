@@ -72,59 +72,31 @@ router.post('/add-category', (req, res) => {
 });
 
 /*
-* Post reorder page index
+* Get edit category
 */
-router.post('/reorder-page', (req, res) => {
-  var ids = req.body['id[]'];
-  var count = 0;
-
-  for (var i = 0; i < ids.length; i++) {
-    var id = ids[i];
-    count++;
-
-    ((count) => {
-      Category.findById(id, (err, page) => {
-        page.sorting = count;
-        page.save((err) => {
-          if (err) return console.log(err)
-        });
-      });
-    })(count)
-    
-  }
-});
-
-/*
-* Get edit page
-*/
-router.get('/edit-page/:slug', (req, res) => {
+router.get('/edit-category/:id', (req, res) => {
   
-  Category.findOne({ slug: req.params.slug }, (err, page) => {
+  Category.findById(req.params.id, (err, category) => {
     if (err) return console.log(err);
 
-    res.render('admin/editPage', {
-      id: page._id,
-      title: page.title,
-      slug: page.slug,
-      content: page.content
+    res.render('admin/editCategory', {
+      id: category._id,
+      title: category.title
     });
   });
 
 });
 
 /*
-* Post edit page
+* Post edit category
 */
-router.post('/edit-page/:slug', (req, res) => {
+router.post('/edit-category/:id', (req, res) => {
 
   req.checkBody('title', 'Title must have a value.').notEmpty();
-  req.checkBody('content', 'Content must have a value.').notEmpty();
 
-  const id = req.body.id;
+  const id = req.params.id;
   let title = req.body.title;
-  let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
-  if (slug == '') slug = title.replace(/\s+/g, '-').toLowerCase();
-  let content = req.body.content;
+  let slug = title.replace(/\s+/g, '-').toLowerCase();
 
   const errors = req.validationErrors();
 
@@ -132,37 +104,30 @@ router.post('/edit-page/:slug', (req, res) => {
     res.render('admin/editCategory', {
       errors,
       id,
-      title,
-      slug,
-      content
+      title
     });
   } else {
-    Category.findOne({ slug, _id: {'$ne': id} }, (err, page) => {
-      if (page) {
-        req.flash('danger', 'Category slug exists, choose another.');
+    Category.findOne({ slug, _id: {'$ne': id} }, (err, category) => {
+      if (category) {
+        req.flash('danger', 'Category title exists, choose another.');
         res.render('admin/editCategory', {
           id,
-          title,
-          slug,
-          content
+          title
         });
       } else {
-        Category.findById(id, (err, page) => {
+        Category.findById(id, (err, category) => {
           if (err) console.log(err);
 
-          page.title = title;
-          page.slug = slug;
-          page.content = content;
+          category.title = title;
+          category.slug = slug;
 
-          console.log(page)
-
-          page.save((err) => {
+          category.save((err) => {
             if (err) {
               return console.log(err);
             }
 
             req.flash('success', 'Category edited!');
-            res.redirect('/admin/pages/edit-page/' + page.slug);
+            res.redirect('/admin/categories/edit-category/' + id);
           });
         });
 

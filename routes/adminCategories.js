@@ -16,67 +16,54 @@ router.get('/', (req, res) => {
 });
 
 /*
-* Get add page
+* Get add category
 */
-router.get('/add-page', (req, res) => {
+router.get('/add-category', (req, res) => {
   const title = '';
-  const slug = '';
-  const content = '';
 
-  res.render('admin/addPage', {
-    title: title,
-    slug: slug,
-    content: content
+  res.render('admin/addCategory', {
+    title: title
   });
 
 });
 
 /*
-* Post add page
+* Post add category
 */
-router.post('/add-page', (req, res) => {
+router.post('/add-category', (req, res) => {
 
   req.checkBody('title', 'Title must have a value.').notEmpty();
-  req.checkBody('content', 'Content must have a value.').notEmpty();
 
   const title = req.body.title;
-  let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
-  if (slug == '') slug = title.replace(/\s+/g, '-').toLowerCase();
-  const content = req.body.content;
+  const slug = title.replace(/\s+/g, '-').toLowerCase();
 
   const errors = req.validationErrors();
 
   if (errors) {
     res.render('admin/addCategory', {
       errors,
-      title,
-      slug,
-      content
+      title
     });
   } else {
-    Category.findOne({ slug }, (err, page) => {
-      if (page) {
-        req.flash('danger', 'Category slug exists, choose another.');
+    Category.findOne({ slug }, (err, category) => {
+      if (category) {
+        req.flash('danger', 'Category title exists, choose another.');
         res.render('admin/addCategory', {
-          title,
-          slug,
-          content
+          title
         });
       } else {
-        const page = new Category({
+        const category = new Category({
           title,
-          slug,
-          content,
-          sorting: 100
+          slug
         });
 
-        page.save((err) =>{
+        category.save((err) =>{
           if (err) {
             return console.log(err);
           }
 
           req.flash('success', 'Category added!');
-          res.redirect('/admin/pages');
+          res.redirect('/admin/categories');
         });
       }
     });

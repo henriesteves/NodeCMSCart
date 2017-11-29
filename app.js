@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const expressValidator = require('express-validator');
+const fileUpload = require('express-fileupload');
 
 const config = require('./config/database');
 
@@ -30,6 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set global errors variable
 app.locals.errors = null;
+
+// Express fileUpload Middleware
+app.use(fileUpload());
 
 // Body Parser Middleware
 // parse application/x-www-form-urlencoded
@@ -75,10 +79,12 @@ app.use(function (req, res, next) {
 const pages = require('./routes/pages');
 const adminPages = require('./routes/adminPages');
 const adminCategories = require('./routes/adminCategories');
+const adminProducts = require('./routes/adminProducts');
 
 app.use('/', pages);
 app.use('/admin/pages', adminPages);
 app.use('/admin/categories', adminCategories);
+app.use('/admin/products', adminProducts);
 
 // Start the server
 const port = 3000;

@@ -2,11 +2,11 @@
 
 <h2 class="page-title">Edit a Page</h2>
 
-<a href="/admin/pages/edit-page/<%= slug %>" class="btn btn-primary">Back to all pages</a>
+<a href="/admin/pages" class="btn btn-primary">Back to all pages</a>
 
 <br><br>
 
-<form action="/admin/pages/add-page" method="post">
+<form action="/admin/pages/edit-page/<%= slug %>" method="post">
 
   <div class="form-group">
     <label for="title">Title</label>
@@ -14,7 +14,7 @@
   </div>
 
   <div class="form-group">
-    <label for="slug">Title</label>
+    <label for="slug">Slug</label>
     <input id="slug" class="form-control" type="text" name="slug" value="<%= slug %>" placeholder="Slug">
   </div>
 

@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const session = require('express-session')
+const session = require('express-session');
 const expressValidator = require('express-validator');
 
 const config = require('./config/database');
@@ -40,9 +40,9 @@ app.use(bodyParser.json());
 // Express Session Middleware
 app.use(session({
   secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
+  resave: true,
+  saveUninitialized: true
+  //  cookie: { secure: true }
 }));
 
 // Express Validator Middleware

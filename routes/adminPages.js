@@ -125,5 +125,65 @@ router.get('/edit-page/:slug', (req, res) => {
 
 });
 
+/*
+* Post edit page
+*/
+router.post('/edit-page/:slug', (req, res) => {
+
+  req.checkBody('title', 'Title must have a value.').notEmpty();
+  req.checkBody('content', 'Content must have a value.').notEmpty();
+
+  const id = req.body.id;
+  let title = req.body.title;
+  let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+  if (slug == '') slug = title.replace(/\s+/g, '-').toLowerCase();
+  let content = req.body.content;
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    res.render('admin/editPage', {
+      errors,
+      id,
+      title,
+      slug,
+      content
+    });
+  } else {
+    Page.findOne({ slug, _id: {'$ne': id} }, (err, page) => {
+      if (page) {
+        req.flash('danger', 'Page slug exists, choose another.');
+        res.render('admin/editPage', {
+          id,
+          title,
+          slug,
+          content
+        });
+      } else {
+        Page.findById(id, (err, page) => {
+          if (err) console.log(err);
+
+          page.title = title;
+          page.slug = slug;
+          page.content = content;
+
+          console.log(page)
+
+          page.save((err) => {
+            if (err) {
+              return console.log(err);
+            }
+
+            req.flash('success', 'Page edited!');
+            res.redirect('/admin/pages/edit-page/' + page.slug);
+          });
+        });
+
+      }
+    });
+  }
+
+});
+
 // Exports
 module.exports = router;

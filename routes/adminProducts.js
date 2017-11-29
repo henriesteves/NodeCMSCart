@@ -37,13 +37,16 @@ router.get('/', (req, res) => {
 */
 router.get('/add-product', (req, res) => {
   const title = '';
-  const slug = '';
-  const content = '';
+  const description = '';
+  const price = '';
 
-  res.render('admin/addProduct', {
-    title: title,
-    slug: slug,
-    content: content
+  Category.find((err, categories) => {
+      res.render('admin/addProduct', {
+          categories,
+          title,
+          description,
+          price
+      });
   });
 
 });
@@ -53,43 +56,81 @@ router.get('/add-product', (req, res) => {
 */
 router.post('/add-product', (req, res) => {
 
+  const imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+
   req.checkBody('title', 'Title must have a value.').notEmpty();
-  req.checkBody('content', 'Content must have a value.').notEmpty();
+  req.checkBody('description', 'Description must have a value.').notEmpty();
+  req.checkBody('price', 'Price must have a value.').isDecimal();
+  req.checkBody('image', 'You must upload an image').isImage(imageFile);
 
   const title = req.body.title;
-  let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
-  if (slug == '') slug = title.replace(/\s+/g, '-').toLowerCase();
-  const content = req.body.content;
+  const slug = title.replace(/\s+/g, '-').toLowerCase();
+  const description = req.body.description;
+  const price = req.body.price;
+  const category = req.body.category;
 
   const errors = req.validationErrors();
 
+  console.log(errors)
+
   if (errors) {
-    res.render('admin/addProduct', {
-      errors,
-      title,
-      slug,
-      content
+    Category.find((err, categories) => {
+      res.render('admin/addProduct', {
+        errors,
+        categories,
+        title,
+        description,
+        price
+      });
     });
   } else {
     Product.findOne({ slug }, (err, product) => {
       if (product) {
-        req.flash('danger', 'Product slug exists, choose another.');
-        res.render('admin/addProduct', {
-          title,
-          slug,
-          content
-        });
+        req.flash('danger', 'Product title exists, choose another.');
+          Category.find((err, categories) => {
+              res.render('admin/addProduct', {
+                  categories,
+                  title,
+                  description,
+                  price
+              });
+          });
       } else {
+        const price2 = parseFloat(price).toFixed(2);
         const product = new Product({
           title,
           slug,
-          content,
-          sorting: 100
+          description,
+          price: price2,
+          category: category,
+          image: imageFile
         });
 
         product.save((err) =>{
           if (err) {
             return console.log(err);
+          }
+
+          mkdirp('public/product-images/' + product._id, (err) =>{
+            return console.log(err);
+          });
+
+          mkdirp('public/product-images/' + product._id + '/gallery', (err) =>{
+              return console.log(err);
+          });
+
+          mkdirp('public/product-images/' + product._id + '/gallery/thumbs', (err) =>{
+              return console.log(err);
+          });
+
+          if (imageFile != '') {
+            const productImage = req.files.image;
+            const path = 'public/product-images/' + product._id + '/' + imageFile;
+
+            productImage.mv(path, (err) => {
+              return console.log((err))
+            });
+
           }
 
           req.flash('success', 'Product added!');

@@ -6,7 +6,7 @@
 
 <br><br>
 
-<form action="/admin/pages/edit-page/<%= slug %>" method="post">
+<form action="/admin/pages/edit-page/<%= id %>" method="post">
 
   <div class="form-group">
     <label for="title">Title</label>
@@ -22,8 +22,6 @@
     <label for="ta">Content</label>
     <textarea id="ta" class="form-control" name="content" placeholder="Content"><%= content %></textarea>
   </div>
-
-  <input type="hidden" name="id" value="<%= id %>">
 
   <button class="btn btn-default">Submit</button>
 

@@ -110,9 +110,9 @@ router.post('/reorder-page', (req, res) => {
 /*
 * Get edit page
 */
-router.get('/edit-page/:slug', (req, res) => {
+router.get('/edit-page/:id', (req, res) => {
   
-  Page.findOne({ slug: req.params.slug }, (err, page) => {
+  Page.findById(req.params.id, (err, page) => {
     if (err) return console.log(err);
 
     res.render('admin/editPage', {
@@ -128,12 +128,12 @@ router.get('/edit-page/:slug', (req, res) => {
 /*
 * Post edit page
 */
-router.post('/edit-page/:slug', (req, res) => {
+router.post('/edit-page/:id', (req, res) => {
 
   req.checkBody('title', 'Title must have a value.').notEmpty();
   req.checkBody('content', 'Content must have a value.').notEmpty();
 
-  const id = req.body.id;
+  const id = req.params.id;
   let title = req.body.title;
   let slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
   if (slug == '') slug = title.replace(/\s+/g, '-').toLowerCase();
@@ -175,7 +175,7 @@ router.post('/edit-page/:slug', (req, res) => {
             }
 
             req.flash('success', 'Page edited!');
-            res.redirect('/admin/pages/edit-page/' + page.slug);
+            res.redirect('/admin/pages/edit-page/' + id);
           });
         });
 

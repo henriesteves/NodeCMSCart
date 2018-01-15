@@ -4,7 +4,7 @@
     <h1 class="page-header"><%= product.title %></h1>
 
     <div class="col-xs-12 col-md-5">
-        <img class="spi" src="/product-images/<%= product.id %>/<%= product.image %>" alt="">
+        <img class="spi" src="<%= (product.image) ? '/product-images/' + product._id + '/' + product.image : '/images/noimage.png' %>" alt="">
         <br>
     </div>
     <div class="col-xs-12 col-md-7">

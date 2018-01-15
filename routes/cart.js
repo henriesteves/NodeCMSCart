@@ -23,7 +23,7 @@ router.get('/add/:product', (req, res) => {
         title: slug,
         qty: 1,
         price: parseFloat(product.price).toFixed(2),
-        image: '/product_images/' + product._id + '/' + product.image
+        image: (product.image) ? '/product-images/' + product._id + '/' + product.image : '/images/noimage.png'
       });
 
       console.log(req.session.cart);
@@ -44,7 +44,7 @@ router.get('/add/:product', (req, res) => {
           title: slug,
           qty: 1,
           price: parseFloat(product.price).toFixed(2),
-          image: '/product_images/' + product._id + '/' + product.image
+          image: (product.image) ? '/product-images/' + product._id + '/' + product.image : '/images/noimage.png'
         });
       }
 
@@ -55,6 +55,18 @@ router.get('/add/:product', (req, res) => {
     req.flash('success', 'Product added!');
     res.redirect('back');
 
+  });
+
+});
+
+/*
+ * Get checkout page
+ */
+router.get('/checkout', (req, res) => {
+
+  res.render('checkout', {
+    title: 'Ckeckout',
+    cart: req.session.cart
   });
 
 });

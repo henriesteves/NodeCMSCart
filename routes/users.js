@@ -92,5 +92,31 @@ router.post('/register', (req, res) => {
 
 });
 
+/*
+ * GET login
+ */
+router.get('/login', function (req, res) {
+
+  if (res.locals.user) res.redirect('/');
+
+  res.render('login', {
+    title: 'Log in'
+  });
+
+});
+
+/*
+ * POST login
+ */
+router.post('/login', function (req, res, next) {
+
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  })(req, res, next);
+
+});
+
 // Exports
 module.exports = router;

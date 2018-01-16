@@ -52,6 +52,7 @@ router.get('/:category', (req, res) => {
 router.get('/:category/:product', (req, res) => {
 
   let galleryImage = null;
+  const loggedIn = (req.isAuthenticated()) ? true : false;
 
   Product.findOne({ slug: req.params.product }, (err, product) => {
     if (err) {
@@ -68,7 +69,8 @@ router.get('/:category/:product', (req, res) => {
           res.render('product', {
             title: product.title,
             product: product,
-            galleryImage: galleryImage
+            galleryImage: galleryImage,
+            loggedIn: loggedIn
           });
         }
       });

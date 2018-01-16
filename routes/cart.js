@@ -125,5 +125,16 @@ router.get('/clear', (req, res) => {
 
 });
 
+/*
+ * Get buy now
+ */
+router.get('/buynow', (req, res) => {
+
+  delete req.session.cart;
+
+  res.sendStatus(200);
+
+});
+
 // Exports
 module.exports = router;

@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs-extra');
 
+const auth = require('../config/auth');
+const isUser = auth.isUser;
+
 // Get product model
 const Product = require('../models/product');
 const Category = require('../models/category');
@@ -10,6 +13,7 @@ const Category = require('../models/category');
  * Get all products
  */
 router.get('/', (req, res) => {
+//router.get('/', isUser, (req, res) => {
 
   Product.find((err, products) => {
     if (err) {

@@ -40,6 +40,7 @@ router.post('/register', (req, res) => {
 
     res.render('register', {
       errors,
+      user: null,
       title: 'Register'
     });
 
@@ -115,6 +116,18 @@ router.post('/login', function (req, res, next) {
     failureRedirect: '/users/login',
     failureFlash: true
   })(req, res, next);
+
+});
+
+/*
+ * GET logout
+ */
+router.get('/logout', function (req, res) {
+
+  req.logout();
+
+  req.flash('success', 'You are logged out!');
+  res.redirect('/users/login');
 
 });
 
